@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import re
 import spacy
@@ -134,12 +135,12 @@ interview_prep_keywords = [
 
 # Function to extract skills and proficiencies
 def extract_skills(description):
-    found_skills = []
+    found_skills = set()
     for skill in skills_keywords:
-        if re.search(r'\b' + re.escape(skill) + r'\b', description.lower()):
-            found_skills.append(skill)
+        if re.search(r'\b' + re.escape(skill.lower()) + r'\b', description.lower()):
+            found_skills.add(skill)
     print("Extracting Skill Keywords.")
-    return found_skills
+    return list(found_skills)
 
 
 # Function to check job accessibility (e.g., entry-level, degree required)
@@ -156,16 +157,35 @@ def extract_job_accessibility(description):
 def analyze_sentiment(description):
     print("Analyzing Sentiment.")
     sentiment = TextBlob(description).sentiment
+
     return sentiment.polarity, sentiment.subjectivity
 
 
+def interpret_sentiment(polarity, subjectivity):
+    sentiment = "Neutral"
+    if polarity > 0.1:
+        sentiment = "Positive"
+    elif polarity < -0.1:
+        sentiment = "Negative"
+
+    subjectivity_label = "Objective" if subjectivity < 0.5 else "Subjective"
+
+    return f"Sentiment: {sentiment} | Subjectivity: {subjectivity_label}"
+
+# Interpret sentiment example:
+# polarity, subjectivity = 0.24166666666666664, 0.44375000000000003
+# interpretation = interpret_sentiment(polarity, subjectivity)
+# print(interpretation)
+
 # Function to extract NER (e.g., location, company names, job titles)
+
+
 def extract_ner(description):
     doc = nlp(description)
     entities = {}
     for ent in doc.ents:
         if ent.label_ in ['ORG', 'GPE', 'LOC', 'PRODUCT']:
-            entities[ent.label_] = entities.get(ent.label_, []) + [ent.text]
+            entities = {label: list(set(values)) for label, values in entities.items()}
     print("NER extracted.")
     return entities
 
@@ -186,6 +206,7 @@ def process_job_descriptions(df):
         interview = extract_interview_prep_keywords(description)
         sentiment = analyze_sentiment(description)
         ner = extract_ner(description)
+        sentiment = interpret_sentiment(sentiment[0], sentiment[1])
 
         skill_data.append(skills)
         accessibility_data.append(accessibility)
@@ -229,7 +250,9 @@ def process_csv_file(file_path):
     df_processed = process_job_descriptions(df)
 
     # Save the processed DataFrame to a new CSV file
-    output_file = file_path.split("./csvs/spaCy/")[0] + "_processed.csv"
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
+    output_file = os.path.join(os.path.dirname("./csvs/processed/"), base_name + "_processed.csv")
+
     df_processed.to_csv(output_file, index=False)
 
     print(f"Processed data saved to {output_file}")
@@ -240,7 +263,7 @@ def process_csv_file(file_path):
 # processed_df = process_csv_file("your_file.csv")
 
 
-processed_df = process_csv_file("csvs/EXAMPLE_linkedin_jobs.csv")
+processed_df = process_csv_file("csvs/example_linkedin_jobs.csv")
 
 # Display the processed DataFrame
 print(processed_df)
