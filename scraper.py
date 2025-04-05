@@ -49,6 +49,7 @@ COMPANY_BOARDS = [
 ]
 
 
+
 def scrape_remoteok_jobs():
 
 
@@ -132,18 +133,6 @@ def scrape_greenhouse_jobs():
         print("Scraping complete! Data saved to greenhouse_jobs.csv")
         return df
 
-
-
-
-
-# Run and saves remoteok_jobs.csv
-# scrape_remoteok_jobs()
-
-# Run and saves greenhouse_jobs.csv
-# scrape_greenhouse_jobs()
-
-# Run and saves indeed_jobs.csv
-# scrape_indeed_jobs()
 
 
 
@@ -253,7 +242,6 @@ options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# scrape_linkedin_jobs(LINKEDIN_URL, csv_path="./csvs/linkin_jobs_ec.csv")
 
 search_url = "https://www.linkedin.com/jobs/search/?keywords=Web%20Developer&location=United%20States"
 
@@ -266,3 +254,10 @@ df = scrape_linkedin_jobs(
 )
 
 driver.quit()
+
+
+# Run and saves remoteok_jobs.csv
+scrape_remoteok_jobs()
+
+# Run and saves greenhouse_jobs.csv
+scrape_greenhouse_jobs()
