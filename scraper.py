@@ -1,5 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 import time
 # import undetected_chromedriver as uc
@@ -14,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 ###
 # 1. Run this file
-# 2. Three .csv files will be saved to the ./csvs/ folder: greenhouse_jobs.csv, indeed_jobs.csv and linkedin_jobs.csv
+# 2. Four .csv files will be saved to the ./csvs/ folder: remoteok_jobs.csv, greenhouse_jobs.csv, indeed_jobs.csv and linkedin_jobs.csv
 # 3. View and run pandas operations in dataframe_notes.ipynb on your dataframes
 # 4. Come back and modify the URL variables to conduct your own scrapes
 # 5. CHANGE your filenames in ./csvs/ if you don't want to overwrite your .csvs everytime you run this
@@ -23,23 +21,24 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Scroll down to the bottom and comment out one of the function calls
 # Run one at a time if webdriver only delivers one csv
-# Optional tools are commented out some functions that gave me trouble
+# Optional tools are commented out in some functions that gave me trouble
 # You may have to run in AWS if you can't manage it locally
 ###
 
 
-# Indeed URL (modify based on the job board you're targeting)
-INDEED_URL = "https://www.indeed.com/jobs?q=data+engineer&l=remote"
 
-# LinkedIn job search URL (modify as needed)
+# RemoteOK job search URL (modify as needed)
 REMOTEOK_URL = "https://remoteok.com/remote-dev-jobs"
 
 # LinkedIn job search URL (modify as needed)
 LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?keywords=data%20engineer&location=Remote"
 
+# Indeed URL
+INDEED_URL = "https://www.indeed.com/jobs?q=data+engineer&l=remote"
+
 # List of Greenhouse company job boards to target
 COMPANY_BOARDS = [
-    "https://boards.greenhouse.io/airbnb",
+    "https://careers.airbnb.com/",
     "https://boards.greenhouse.io/robinhood",
     "https://boards.greenhouse.io/stripe"
 ]
@@ -98,40 +97,42 @@ def scrape_greenhouse_jobs():
         print(f"Scraping: {board_url}")
         driver.get(board_url)
 
-        try:
-            # Scroll down & load more jobs
-            driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
-            time.sleep(2)
-            postings = WebDriverWait(driver, 10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, "opening"))
-            )
+        # Scroll down & load more jobs
+        driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
+        time.sleep(2)
+        postings = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "opening"))
+        )
 
-            for post in postings:
-                try:
-                    title_el = post.find_element(By.TAG_NAME, "a")
-                    title = title_el.text.strip()
-                    job_link = title_el.get_attribute("href")
-                    location_el = post.find_element(By.CLASS_NAME, "location")
-                    location = location_el.text.strip() if location_el else "N/A"
+        for post in postings:
+            try:
+                title_el = post.find_element(By.TAG_NAME, "a")
+                title = title_el.text.strip()
+                job_link = title_el.get_attribute("href")
+                location_el = post.find_element(By.CLASS_NAME, "location")
+                location = location_el.text.strip() if location_el else "N/A"
 
-                    job_list.append({
-                        "Title": title,
-                        "Company": board_url.split("/")[-1].capitalize(),
-                        "Location": location,
-                        "Job Link": job_link
-                    })
-                except Exception as e:
-                    print(f"Error extracting post data: {e}")
-        except Exception as e:
-            print(f"Error loading job board: {board_url} — {e.with_traceback}")
-    driver.quit()
-    df = pd.DataFrame(job_list)
-    df.to_csv("./csvs/greenhouse_jobs.csv", index=False)
-    print("Scraping complete! Data saved to greenhouse_jobs.csv")
-    return df
+                job_list.append({
+                    "Title": title,
+                    "Company": board_url.split("/")[-1].capitalize(),
+                    "Location": location,
+                    "Job Link": job_link
+                })
+            except Exception as e:
+                print(f"Error extracting post data: {e}")
+
+        driver.quit()
+        df = pd.DataFrame(job_list)
+        df.to_csv("./csvs/greenhouse_jobs.csv", index=False)
+        print("Scraping complete! Data saved to greenhouse_jobs.csv")
+        return df
 
 
 def scrape_linkedin_jobs(num_pages=5):
+
+    # Might help to login to linkedin for this
+
+
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Run in background
     options.add_argument("--no-sandbox")
@@ -152,11 +153,13 @@ def scrape_linkedin_jobs(num_pages=5):
                 company = job.find_element(By.CLASS_NAME, "base-search-card__subtitle").text.strip()
                 location = job.find_element(By.CLASS_NAME, "job-search-card__location").text.strip()
                 job_link = job.find_element(By.TAG_NAME, "a").get_attribute("href")
+                job_desc = driver.find_element(By.CSS_SELECTOR, "div.description__text").text
 
                 job_list.append({
                     "Title": title,
                     "Company": company,
                     "Location": location,
+                    "Job Description": job_desc,
                     "Job Link": job_link
                 })
             except Exception as e:
@@ -168,8 +171,8 @@ def scrape_linkedin_jobs(num_pages=5):
 
     # Save results
     df = pd.DataFrame(job_list)
-    df.to_csv("./csvs/linkedin_jobs.csv", index=False)
-    print("Scraping complete! Data saved to linkedin_jobs.csv")
+    df.to_csv("./csvs/EXAMPLE_linkedin_jobs.csv", index=False)
+    print("Scraping complete! Data saved to EXAMPLE_linkedin_jobs.csv")
 
     driver.quit()
 
