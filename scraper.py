@@ -6,15 +6,16 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+###
+# Run this file and
+# Scroll down to the bottom and comment out one of the function calls to run one at a time if webdriver only delivers one csv
+###
+
+
 
 
 # Indeed URL (modify based on the job board you're targeting)
 INDEED_URL = "https://www.indeed.com/jobs?q=data+engineer&l=remote"
-
-# Headers to mimic a browser visit (using Bsoup and requests - if this doesn't work, use selenium & webdriver)
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-}
 
 # LinkedIn job search URL (modify as needed)
 LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?keywords=data%20engineer&location=Remote"
@@ -128,4 +129,4 @@ scrape_indeed_jobs_selenium()
 
 
 # Run the scraper
-scrape_linkedin_jobs()
+# scrape_linkedin_jobs()
