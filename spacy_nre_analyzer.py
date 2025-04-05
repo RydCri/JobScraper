@@ -4,6 +4,17 @@ import re
 import spacy
 from textblob import TextBlob
 
+"""
+    This file is for extracting from the keyword lists in the main text content block of a job posting. 
+    Your dataframe must contain the Job Description column to run the main method that processes all the other functions.
+    At the bottom of this script is the variable processed_df = process_csv_file("csvs/example_linkedin_jobs.csv")
+    Replace the path with your .csv file to use the model.
+    it will output a new .csv in ./csvs/processed/<your-file-name>_processed.csv
+    You can then use that file in ./juypter_notebooks/spacy.ipynb
+    
+"""
+
+
 
 # Load pre-trained spaCy model for Named Entity Recognition (NER)
 
@@ -110,10 +121,6 @@ interview_prep_keywords = [
     'leetcode', 'hackerrank', 'codewars', 'exercism', 'coderbyte', 'topcoder', 'codeforces', 'project euler',
     'codesignal', 'edx', 'freecodecamp', 'hackerearth', 'kaggle', 'interviewbit', 'spoj', 'pramp',
 
-    # Interview Preparation Resources
-    'cracking the coding interview', 'elements of programming interviews', 'interviewing.io', 'coderpad', 'pramp', 'geeksfor geeks', 'leetcode premium',
-    'ctci', 'systems design interview', 'the tech interview handbook', 'the interview guys', 'hackerrank interview prep',
-
     # Portfolio & GitHub-related Keywords
     'portfolio', 'github', 'gitlab', 'bitbucket', 'personal website', 'personal portfolio', 'portfolio projects', 'github repositories', 'github profile',
     'github pages', 'portfolio website', 'projects on github', 'project showcase', 'developer portfolio',
@@ -170,7 +177,7 @@ def interpret_sentiment(polarity, subjectivity):
 
     subjectivity_label = "Objective" if subjectivity < 0.5 else "Subjective"
 
-    return f"Sentiment: {sentiment} | Subjectivity: {subjectivity_label}"
+    return sentiment, subjectivity_label
 
 # Interpret sentiment example:
 # polarity, subjectivity = 0.24166666666666664, 0.44375000000000003
