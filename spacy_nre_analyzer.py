@@ -104,6 +104,33 @@ entry_keywords = [
     'basic programming', 'html', 'css', 'sql', 'python', 'excel', 'basic javascript', 'wordpress', 'google analytics', 'mailchimp'
 ]
 
+interview_prep_keywords = [
+    # Coding Challenge Platforms
+    'leetcode', 'hackerrank', 'codewars', 'exercism', 'coderbyte', 'topcoder', 'codeforces', 'project euler',
+    'codesignal', 'edx', 'freecodecamp', 'hackerearth', 'kaggle', 'interviewbit', 'spoj', 'pramp',
+
+    # Interview Preparation Resources
+    'cracking the coding interview', 'elements of programming interviews', 'interviewing.io', 'coderpad', 'pramp', 'geeksfor geeks', 'leetcode premium',
+    'ctci', 'systems design interview', 'the tech interview handbook', 'the interview guys', 'hackerrank interview prep',
+
+    # Portfolio & GitHub-related Keywords
+    'portfolio', 'github', 'gitlab', 'bitbucket', 'personal website', 'personal portfolio', 'portfolio projects', 'github repositories', 'github profile',
+    'github pages', 'portfolio website', 'projects on github', 'project showcase', 'developer portfolio',
+
+    # Soft Skills Related to Interviews
+    'communication skills', 'problem solving', 'critical thinking', 'collaboration', 'teamwork', 'leadership skills', 'project management', 'time management',
+    'attention to detail', 'adaptability', 'learning mindset', 'creativity', 'curiosity', 'strong work ethic', 'growth mindset', 'self-motivated', 'conflict resolution',
+
+    # Behavioral Interview Prep
+    'STAR method', 'behavioral interview', 'situational interview', 'tell me about a time', 'give me an example', 'tell me about yourself', 'why do you want to work here',
+    'strengths and weaknesses', 'why should we hire you', 'what is your greatest accomplishment', 'how do you handle stress', 'what motivates you',
+
+    # Technical Interview Prep
+    'technical interview', 'systems design interview', 'data structures and algorithms', 'object-oriented design', 'dynamic programming', 'recursion', 'algorithms',
+    'binary search', 'graph algorithms', 'sorting algorithms', 'big o notation', 'time complexity', 'space complexity', 'circular linked list', 'hash table', 'binary tree',
+    'object-oriented programming', 'mock interviews', 'data structures', 'algorithms challenges', 'technical whiteboarding', 'debugging', 'coding tests',
+]
+
 
 # Function to extract skills and proficiencies
 def extract_skills(description):
@@ -111,7 +138,9 @@ def extract_skills(description):
     for skill in skills_keywords:
         if re.search(r'\b' + re.escape(skill) + r'\b', description.lower()):
             found_skills.append(skill)
+    print("Extracting Skill Keywords.")
     return found_skills
+
 
 # Function to check job accessibility (e.g., entry-level, degree required)
 def extract_job_accessibility(description):
@@ -119,12 +148,16 @@ def extract_job_accessibility(description):
     for keyword in entry_keywords:
         if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
             accessibility.append(keyword)
+    print("Extracting Accessibility Keywords.")
     return accessibility
+
 
 # Function to perform sentiment analysis and extract sentiment
 def analyze_sentiment(description):
+    print("Analyzing Sentiment.")
     sentiment = TextBlob(description).sentiment
     return sentiment.polarity, sentiment.subjectivity
+
 
 # Function to extract NER (e.g., location, company names, job titles)
 def extract_ner(description):
@@ -133,11 +166,14 @@ def extract_ner(description):
     for ent in doc.ents:
         if ent.label_ in ['ORG', 'GPE', 'LOC', 'PRODUCT']:
             entities[ent.label_] = entities.get(ent.label_, []) + [ent.text]
+    print("NER extracted.")
     return entities
+
 
 # Main function to process the job descriptions
 # If you make a custom function for a new column, include it in here
 def process_job_descriptions(df):
+
     skill_data = []
     accessibility_data = []
     interview_data = []
@@ -164,24 +200,21 @@ def process_job_descriptions(df):
     df['Sentiment'] = sentiment_data
     df['NER'] = ner_data
 
+    print("spaCy and NER functions completed.")
     return df
 
 
+def extract_interview_prep_keywords(description):
 
-def extract_interview_prep_keywords(df, interview_prep_keywords):
-    """
-    This function scans job descriptions for keywords related to interview preparation
-    like coding challenges, interview prep books, or portfolio project terms.
-    """
-    def find_keywords(description, keywords):
-        found_keywords = []
-        for keyword in keywords:
-            if keyword.lower() in description.lower():
-                found_keywords.append(keyword)
-        return found_keywords
+    #     This function scans job descriptions for keywords related to interview preparation
+    #     like coding challenges, interview prep books, or portfolio project terms.
 
-    df['Interview Prep Keywords'] = df['Job Description'].apply(lambda x: find_keywords(x, interview_prep_keywords))
-    return df
+    interview_keywords = []
+    for keyword in interview_prep_keywords:
+        if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
+            interview_keywords.append(keyword)
+            print("Extracting Accessibility Keywords.")
+    return interview_keywords
 
 # Full processing function for a CSV
 def process_csv_file(file_path):
@@ -196,18 +229,18 @@ def process_csv_file(file_path):
     df_processed = process_job_descriptions(df)
 
     # Save the processed DataFrame to a new CSV file
-    output_file = file_path.split(".")[0] + "_processed.csv"
+    output_file = file_path.split("./csvs/spaCy/")[0] + "_processed.csv"
     df_processed.to_csv(output_file, index=False)
 
     print(f"Processed data saved to {output_file}")
     return df_processed
 
-# Use the function to process a CSV file
-
 
 # Replace 'your_file.csv' with the actual CSV file path
 # processed_df = process_csv_file("your_file.csv")
-processed_df = process_csv_file("./csvs/sentiment_analysis/spacy.csv")
+
+
+processed_df = process_csv_file("csvs/EXAMPLE_linkedin_jobs.csv")
 
 # Display the processed DataFrame
 print(processed_df)
