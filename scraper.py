@@ -9,21 +9,11 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-def scrape_linkedin_jobs(num_pages=5):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Run in background
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get(LINKEDIN_URL)
-    time.sleep(3)
-
-
-# Base URL (modify based on the job board you're targeting)
+# Indeed URL (modify based on the job board you're targeting)
 INDEED_URL = "https://www.indeed.com/jobs?q=data+engineer&l=remote"
 
-# Headers to mimic a browser visit
+# Headers to mimic a browser visit (using Bsoup and requests - if this doesn't work, use selenium & webdriver)
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 }
@@ -31,7 +21,9 @@ HEADERS = {
 # LinkedIn job search URL (modify as needed)
 LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?keywords=data%20engineer&location=Remote"
 
+
 def scrape_linkedin_jobs(num_pages=5):
+
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Run in background
     options.add_argument("--no-sandbox")
@@ -68,7 +60,7 @@ def scrape_linkedin_jobs(num_pages=5):
 
     # Save results
     df = pd.DataFrame(job_list)
-    df.to_csv("linkedin_jobs.csv", index=False)
+    df.to_csv("./csvs/linkedin_jobs.csv", index=False)
     print("Scraping complete! Data saved to linkedin_jobs.csv")
 
     driver.quit()
