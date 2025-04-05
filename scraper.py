@@ -1,5 +1,3 @@
-import requests # if the page uses javascript, use selenium instead
-from bs4 import BeautifulSoup
 import pandas as pd
 import time
 from selenium import webdriver
@@ -66,30 +64,50 @@ def scrape_linkedin_jobs(num_pages=5):
     driver.quit()
 
 
-def scrape_indeed_jobs(url, num_pages):
+def scrape_indeed_jobs_selenium(num_pages=5):
     job_list = []
 
+    # Setup headless Chrome
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
+
     for page in range(num_pages):
-        print(f"Scraping page {page + 1}...")
-        url = f"{url}&start={page * 10}"  # Indeed paginates every 10 jobs
-        response = requests.get(url, headers=HEADERS)
+        print(f"Scraping page {page+1}...")
+        url = f"{INDEED_URL}&start={page*10}"
+        driver.get(url)
+        time.sleep(3)  # Don't get blocked
 
-        if response.status_code != 200:
-            print("Failed to fetch data:", response.status_code)
-            break
-
-        soup = BeautifulSoup(response.text, "html.parser")
-        job_cards = soup.find_all("div", class_="job_seen_beacon")
+        job_cards = driver.find_elements(By.CLASS_NAME, "job_seen_beacon")
 
         for job in job_cards:
-            title = job.find("h2", class_="jobTitle").text.strip() if job.find("h2", class_="jobTitle") else "N/A"
-            company = job.find("span", class_="companyName").text.strip() if job.find("span",
-                                                                                      class_="companyName") else "N/A"
-            location = job.find("div", class_="companyLocation").text.strip() if job.find("div",
-                                                                                          class_="companyLocation") else "N/A"
-            salary = job.find("div", class_="metadata salary-snippet-container")
-            salary = salary.text.strip() if salary else "Not Provided"
-            job_link = "https://www.indeed.com" + job.find("a", class_="jcs-JobTitle")["href"]
+            try:
+                title = job.find_element(By.CLASS_NAME, "jobTitle").text.strip()
+            except:
+                title = "N/A"
+
+            try:
+                company = job.find_element(By.CLASS_NAME, "companyName").text.strip()
+            except:
+                company = "N/A"
+
+            try:
+                location = job.find_element(By.CLASS_NAME, "companyLocation").text.strip()
+            except:
+                location = "N/A"
+
+            try:
+                salary = job.find_element(By.CLASS_NAME, "salary-snippet").text.strip()
+            except:
+                salary = "Not Provided"
+
+            try:
+                job_link = job.find_element(By.CLASS_NAME, "jcs-JobTitle").get_attribute("href")
+            except:
+                job_link = "N/A"
 
             job_list.append({
                 "Title": title,
@@ -99,15 +117,15 @@ def scrape_indeed_jobs(url, num_pages):
                 "Job Link": job_link
             })
 
-        time.sleep(2)  # Be polite & avoid getting blocked
-
-    return pd.DataFrame(job_list)
+    driver.quit()
+    df = pd.DataFrame(job_list)
+    df.to_csv("./csvs/indeed_jobs.csv", index=False)
+    print("Scraping complete! Data saved to indeed_jobs.csv")
 
 
 # Run the scraper and save results
-df = scrape_indeed_jobs(INDEED_URL,5)
+scrape_indeed_jobs_selenium()
 
-df.to_csv("./csvs/indeed_jobs.csv", index=False)
-print("Scraping complete! Data saved to indeed_jobs.csv")
+
 # Run the scraper
 scrape_linkedin_jobs()
