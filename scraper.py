@@ -14,20 +14,20 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 
-###
-# 1. Run this file
-# 2. Four .csv files will be saved to the ./csvs/ folder: remoteok_jobs.csv, greenhouse_jobs.csv, indeed_jobs.csv and linkedin_jobs.csv
-# 3. View and run pandas operations in dataframe_notes.ipynb on your dataframes
-# 4. Come back and modify the URL variables to conduct your own scrapes
-# 5. CHANGE your filenames in ./csvs/ if you don't want to overwrite your .csvs everytime you run this
+"""""
+1. Run this file
+2. Four .csv files will be saved to the ./csvs/ folder: remoteok_jobs.csv, greenhouse_jobs.csv, indeed_jobs.csv and linkedin_jobs.csv
+3. View and run pandas operations in ./juypter_notebooks/dataframe_notes.ipynb on your dataframes
+4. Come back and modify the URL variables to conduct your own scrapes
+5. CHANGE your filenames in ./csvs/ if you don't want to overwrite your .csvs everytime you run this.
 
 # "I only get one .csv when I run this script"
 
-# Scroll down to the bottom and comment out one of the function calls
-# Run one at a time if webdriver only delivers one csv
-# Optional tools are commented out in some functions that gave me trouble
-# You may have to run in AWS if you can't manage it locally
-###
+Scroll down to the bottom and comment out one of the function calls
+Run one at a time if webdriver only delivers one csv
+Optional tools are commented out in some functions that gave me trouble
+You may have to run in AWS if you can't manage it locally
+"""
 
 
 
@@ -245,12 +245,15 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 
 search_url = "https://www.linkedin.com/jobs/search/?keywords=Web%20Developer&location=United%20States"
 
+# max_jobs can be as high as you want it.
+# If you get a timeout exception your .csv will be saved with whatever you collected so far
+
 df = scrape_linkedin_jobs(
     driver,
     url=search_url,
     scrolls=10,
-    max_jobs=300,
-    csv_path="./csvs/linkedin_ds_jobs.csv"
+    max_jobs=30,
+    csv_path="./csvs/example_linkedin_ds_jobs.csv"
 )
 
 driver.quit()
