@@ -249,7 +249,7 @@ df = scrape_linkedin_jobs(
     driver,
     url=search_url,
     scrolls=10,
-    max_jobs=5,
+    max_jobs=300,
     csv_path="./csvs/linkedin_ds_jobs.csv"
 )
 
