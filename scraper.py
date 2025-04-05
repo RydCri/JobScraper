@@ -9,6 +9,10 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+
+
+
 
 ###
 # 1. Run this file
@@ -31,7 +35,8 @@ from selenium.webdriver.support import expected_conditions as EC
 REMOTEOK_URL = "https://remoteok.com/remote-dev-jobs"
 
 # LinkedIn job search URL (modify as needed)
-LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?keywords=data%20engineer&location=Remote"
+LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?keywords=Web%20Developer&location=United%20States&geoId=103644278"
+
 
 # Indeed URL
 INDEED_URL = "https://www.indeed.com/jobs?q=data+engineer&l=remote"
@@ -128,132 +133,136 @@ def scrape_greenhouse_jobs():
         return df
 
 
-def scrape_linkedin_jobs(num_pages=5):
 
-    # Might help to login to linkedin for this
-
-
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Run in background
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get(LINKEDIN_URL)
-    time.sleep(3)
-
-    job_list = []
-
-    for _ in range(num_pages):
-        jobs = driver.find_elements(By.CLASS_NAME, "base-card")
-
-        for job in jobs:
-            try:
-                title = job.find_element(By.CLASS_NAME, "base-search-card__title").text.strip()
-                company = job.find_element(By.CLASS_NAME, "base-search-card__subtitle").text.strip()
-                location = job.find_element(By.CLASS_NAME, "job-search-card__location").text.strip()
-                job_link = job.find_element(By.TAG_NAME, "a").get_attribute("href")
-                job_desc = driver.find_element(By.CSS_SELECTOR, "div.description__text").text
-
-                job_list.append({
-                    "Title": title,
-                    "Company": company,
-                    "Location": location,
-                    "Job Description": job_desc,
-                    "Job Link": job_link
-                })
-            except Exception as e:
-                print(f"Error extracting job: {e}")
-
-        # Scroll down & load more jobs
-        driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
-        time.sleep(2)
-
-    # Save results
-    df = pd.DataFrame(job_list)
-    df.to_csv("./csvs/EXAMPLE_linkedin_jobs.csv", index=False)
-    print("Scraping complete! Data saved to EXAMPLE_linkedin_jobs.csv")
-
-    driver.quit()
-
-
-def scrape_indeed_jobs(num_pages=5):
-    job_list = []
-
-    # Setup headless Chrome
-    options = webdriver.ChromeOptions()
-
-    # Use undetected Chrome driver if blocked by cloudflare
-    # options = uc.ChromeOptions()
-    options.add_argument("--headless")  # Remove this line if you're debugging
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-    for page in range(num_pages):
-        print(f"Scraping page {page + 1}...")
-        url = f"{INDEED_URL}&start={page * 10}"
-        # driver = uc.Chrome(options=options) # undetected driver
-
-        driver.get(url)
-        # Scroll down & load more jobs
-        driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
-        time.sleep(2)  # optional
-        print(f"Fetching URL: {url}")
-
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, "job_seen_beacon"))
-        )
-        job_cards = driver.find_elements(By.CLASS_NAME, "job_seen_beacon")
-
-        for job in job_cards:
-            try:
-                title = job.find_element(By.CLASS_NAME, "jobTitle").text.strip()
-            except:
-                title = "N/A"
-
-            try:
-                company = job.find_element(By.CLASS_NAME, "companyName").text.strip()
-            except:
-                company = "N/A"
-
-            try:
-                location = job.find_element(By.CLASS_NAME, "companyLocation").text.strip()
-            except:
-                location = "N/A"
-
-            try:
-                salary = job.find_element(By.CLASS_NAME, "salary-snippet").text.strip()
-            except:
-                salary = "Not Provided"
-
-            try:
-                job_link = job.find_element(By.CLASS_NAME, "jcs-JobTitle").get_attribute("href")
-            except:
-                job_link = "N/A"
-
-            job_list.append({
-                "Title": title,
-                "Company": company,
-                "Location": location,
-                "Salary": salary,
-                "Job Link": job_link
-            })
-    df = pd.DataFrame(job_list)
-    df.to_csv("./csvs/indeed_jobs.csv", index=False)
-    print("Scraping complete! Data saved to indeed_jobs.csv")
-    driver.quit()
 
 
 # Run and saves remoteok_jobs.csv
-scrape_remoteok_jobs()
+# scrape_remoteok_jobs()
 
 # Run and saves greenhouse_jobs.csv
-scrape_greenhouse_jobs()
+# scrape_greenhouse_jobs()
 
 # Run and saves indeed_jobs.csv
-scrape_indeed_jobs()
+# scrape_indeed_jobs()
 
-# Run and saves linkedin_jobs.csv
-scrape_linkedin_jobs()
 
+
+def scroll_jobs_sidebar(driver, scroll_times=10):
+    try:
+        container = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "scaffold-layout__list-container"))
+        )
+        for _ in range(scroll_times):
+            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", container)
+            time.sleep(1.5)
+    except:
+        print("⚠️ Sidebar not found — falling back to full page scroll.")
+        for _ in range(scroll_times):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(1.5)
+
+
+
+def wait_for_modal_to_disappear(driver, timeout=10):
+    """ Wait for the modal overlay to disappear (or become invisible) """
+    try:
+        WebDriverWait(driver, timeout).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, 'modal__overlay'))
+        )
+        print("✅ Modal overlay disappeared.")
+    except:
+        print("⚠️ Modal overlay still visible, continuing...")
+
+
+def scrape_linkedin_jobs(driver, url, scrolls=8, max_jobs=None, csv_path="linkedin_jobs.csv"):
+
+    driver.get(url)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "base-search-card"))
+    )
+
+    scroll_jobs_sidebar(driver, scrolls)
+
+    job_data = []
+    job_cards = driver.find_elements(By.CLASS_NAME, 'base-search-card')
+
+    for index, card in enumerate(job_cards):
+        if max_jobs and index >= max_jobs:
+            break
+
+        try:
+            # Wait for modal to disappear before clicking
+            wait_for_modal_to_disappear(driver)
+
+            # Scroll to ensure the job card is visible
+            driver.execute_script("arguments[0].scrollIntoView();", card)
+            time.sleep(1)
+
+            # Ensure the job card is clickable (sometimes just waiting helps)
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(card)
+            )
+
+            # Click the job card
+            ActionChains(driver).move_to_element(card).click().perform()
+            time.sleep(2)
+
+            # Wait for the job details to load (top card with description)
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "show-more-less-html__markup"))
+            )
+
+            # Extract job details
+            title = card.find_element(By.CLASS_NAME, 'base-search-card__title').text.strip()
+            company = card.find_element(By.CLASS_NAME, 'base-search-card__subtitle').text.strip()
+            location = card.find_element(By.CLASS_NAME, 'job-search-card__location').text.strip()
+            job_url = card.find_element(By.TAG_NAME, 'a').get_attribute('href')
+
+            # Extract job description
+            desc_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "show-more-less-html__markup"))
+            )
+            description = desc_element.text.strip()
+
+            job_data.append({
+                'Title': title,
+                'Company': company,
+                'Location': location,
+                'URL': job_url,
+                'Job Description': description
+            })
+
+            print(f"✅ Scraped job {index+1}: {title} @ {company}")
+
+        except Exception as e:
+            print(f"❌ Failed on job {index+1}: {e}")
+            continue
+
+    # Export to CSV
+    df = pd.DataFrame(job_data)
+    df.to_csv(csv_path, index=False)
+    print(f"\n📁 Saved {len(df)} jobs to {csv_path}")
+
+    return df
+
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+# scrape_linkedin_jobs(LINKEDIN_URL, csv_path="./csvs/linkin_jobs_ec.csv")
+
+search_url = "https://www.linkedin.com/jobs/search/?keywords=Web%20Developer&location=United%20States"
+
+df = scrape_linkedin_jobs(
+    driver,
+    url=search_url,
+    scrolls=10,
+    max_jobs=5,
+    csv_path="./csvs/linkedin_ds_jobs.csv"
+)
+
+driver.quit()
