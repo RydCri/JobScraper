@@ -143,9 +143,18 @@ interview_prep_keywords = [
 # Function to extract skills and proficiencies
 def extract_skills(description):
     found_skills = set()
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+
     for skill in skills_keywords:
-        if re.search(r'\b' + re.escape(skill.lower()) + r'\b', description.lower()):
+        # Search for skill keywords in the description
+        if re.search(r'\b' + re.escape(skill.lower()) + r'\b', description):
             found_skills.add(skill)
+
     print("Extracting Skill Keywords.")
     return list(found_skills)
 
@@ -153,6 +162,13 @@ def extract_skills(description):
 # Function to check job accessibility (e.g., entry-level, degree required)
 def extract_job_accessibility(description):
     accessibility = []
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+
     for keyword in entry_keywords:
         if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
             accessibility.append(keyword)
@@ -163,6 +179,13 @@ def extract_job_accessibility(description):
 # Function to perform sentiment analysis and extract sentiment
 def analyze_sentiment(description):
     print("Analyzing Sentiment.")
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+
     sentiment = TextBlob(description).sentiment
 
     return sentiment.polarity, sentiment.subjectivity
@@ -188,8 +211,15 @@ def interpret_sentiment(polarity, subjectivity):
 
 
 def extract_ner(description):
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
     doc = nlp(description)
     entities = {}
+
     for ent in doc.ents:
         if ent.label_ in ['ORG', 'GPE', 'LOC', 'PRODUCT']:
             entities = {label: list(set(values)) for label, values in entities.items()}
@@ -238,6 +268,13 @@ def extract_interview_prep_keywords(description):
     #     like coding challenges, interview prep books, or portfolio project terms.
 
     interview_keywords = []
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+
     for keyword in interview_prep_keywords:
         if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
             interview_keywords.append(keyword)
@@ -270,7 +307,7 @@ def process_csv_file(file_path):
 # processed_df = process_csv_file("your_file.csv")
 
 
-processed_df = process_csv_file("csvs/example_linkedin_jobs.csv")
+processed_df = process_csv_file("csvs/example_linkedin_ds_jobs.csv")
 
 # Display the processed DataFrame
 print(processed_df)
