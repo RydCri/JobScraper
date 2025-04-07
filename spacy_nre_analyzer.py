@@ -15,12 +15,13 @@ from textblob import TextBlob
 """
 
 
-
 # Load pre-trained spaCy model for Named Entity Recognition (NER)
 
 nlp = spacy.load('en_core_web_sm')
 
-# Sample DataFrame with a 'Job Description' column
+# Sample DataFrame with a 'Job Description' column, if you're using a dataframe that you didn't get from scraper.py,
+# you dataframe must contain a 'Job Description' column.
+
 data = {
     'Job Title': ['Software Developer', 'Junior Data Analyst', 'Entry-Level Marketing Specialist'],
     'Job Description': [
@@ -176,6 +177,26 @@ def extract_job_accessibility(description):
     return accessibility
 
 
+def extract_interview_prep_keywords(description):
+
+    #     This function scans job descriptions for keywords related to interview preparation
+    #     like coding challenges, interview prep books, or portfolio project terms.
+
+    interview_keywords = []
+
+    # Ensure description is a string before processing
+    if isinstance(description, str):
+        description = description.lower()
+    else:
+        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+
+    for keyword in interview_prep_keywords:
+        if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
+            interview_keywords.append(keyword)
+            print("Extracting Accessibility Keywords.")
+    return interview_keywords
+
+
 # Function to perform sentiment analysis and extract sentiment
 def analyze_sentiment(description):
     print("Analyzing Sentiment.")
@@ -211,22 +232,19 @@ def interpret_sentiment(polarity, subjectivity):
 
 
 def extract_ner(description):
-    if isinstance(description, str):
-        description = description.lower()
-    else:
-        description = ""
-    doc = nlp(description)
-    entities = {}
-    for ent in doc.ents:
-        if ent.label_ in ['ORG', 'GPE', 'LOC', 'PRODUCT']:
-            if ent.label_ not in entities:
-                entities[ent.label_] = []
-            entities[ent.label_].append(ent.text)
+    if not isinstance(description, str):
+        return []
 
-    # Remove duplicates within each entity type
-    entities = {label: list(set(values)) for label, values in entities.items()}
-    print("NER extracted.")
-    return [entities.items()]
+    description = description.lower()
+    doc = nlp(description)
+    output = []
+
+    for ent in doc.ents:
+        if ent.label_ in ['ORG', 'GPE', 'PRODUCT', 'MONEY']:
+            output.append({ent.label_: ent.text})
+
+    print(f"NER extracted {output}.")
+    return output
 
 
 # Main function to process the job descriptions
@@ -262,26 +280,6 @@ def process_job_descriptions(df):
 
     print("spaCy and NER functions completed.")
     return df
-
-
-def extract_interview_prep_keywords(description):
-
-    #     This function scans job descriptions for keywords related to interview preparation
-    #     like coding challenges, interview prep books, or portfolio project terms.
-
-    interview_keywords = []
-
-    # Ensure description is a string before processing
-    if isinstance(description, str):
-        description = description.lower()
-    else:
-        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
-
-    for keyword in interview_prep_keywords:
-        if re.search(r'\b' + re.escape(keyword) + r'\b', description.lower()):
-            interview_keywords.append(keyword)
-            print("Extracting Accessibility Keywords.")
-    return interview_keywords
 
 
 # Full processing function for a CSV
