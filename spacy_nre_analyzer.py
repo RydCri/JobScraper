@@ -36,12 +36,12 @@ skills_keywords = [
     # Web Development
     'react', 'angular', 'vue.js', 'svelte', 'ember.js', 'backbone.js', 'litElement',
     'node.js', 'express', 'django', 'flask', 'ruby on rails', 'spring', 'laravel', 'asp.net', 'fastapi',
-    'javascript', 'typescript', 'html', 'css', 'python', 'ruby', 'php', 'java', 'c#', 'go', 'kotlin', 'swift', 'rust',
+    'javascript', 'typescript', 'html', 'css', 'python', 'apis', 'api', 'ruby', 'php', 'java', 'c#', 'go', 'kotlin', 'swift', 'rust',
     'bootstrap', 'tailwind css', 'bulma', 'material ui', 'foundation', 'sass', 'less',
-    'jquery', 'webpack', 'babel', 'gulp', 'grunt', 'nginx', 'apache', 'varnish',
-    'rest', 'graphql', 'websockets', 'soap', 'grpc', 'firebase', 'amazon api gateway', 'postman',
-    'mongodb', 'postgresql', 'mysql', 'mariadb', 'sqlite', 'oracle db', 'redis', 'firebase realtime db', 'couchdb',
-    'git', 'github', 'gitlab', 'bitbucket', 'subversion', 'mercurial',
+    'jquery', 'webpack', 'babel', 'gulp', 'grunt', 'nginx', 'apache', 'varnish', 'LAMP',
+    'rest', 'graphql', 'websockets', 'soap', 'rpc', 'grpc', 'firebase', 'amazon api gateway', 'postman',
+    'mongodb', 'postgresql', 'mysql', 'mariadb', 'sqlite', 'oracle db', 'redis', 'firebase', 'couchdb',
+    'git', 'github', 'gitlab', 'bitbucket', 'ssh', 'tls', 'subversion', 'mercurial', 'haskel',
     'mocha', 'jest', 'jasmine', 'selenium', 'cypress', 'puppeteer', 'playwright', 'karma',
     'jenkins', 'circleci', 'travis ci', 'github actions', 'gitlab ci', 'bamboo', 'teamcity',
 
@@ -52,28 +52,28 @@ skills_keywords = [
     'ansible', 'puppet', 'chef', 'saltstack', 'terraform', 'cloudformation',
     'prometheus', 'grafana', 'nagios', 'zabbix', 'elk stack', 'splunk', 'datadog', 'new relic',
     'vmware', 'hyper-v', 'openstack', 'proxmox', 'vagrant', 'apache cloudstack',
-    'terraform', 'pulumi', 'cloudformation', 'ansible',
+    'terraform', 'pulumi', 'cloudformation', 'ansible', 'Glue', 'Athena', 'QuickSight', 'Lambda', 'Amazon RDS', 'DynamoDB',
 
     # Data Science & Engineering
     'pandas', 'numpy', 'matplotlib', 'seaborn', 'plotly', 'bokeh', 'tableau', 'power bi', 'd3.js',
     'apache spark', 'hadoop', 'kafka', 'airflow', 'nifi', 'dask', 'beam', 'luigi', 'celery',
     'tensorflow', 'keras', 'pytorch', 'scikit-learn', 'xgboost', 'lightgbm', 'theano', 'caffe', 'mxnet',
     'hadoop', 'hive', 'pig', 'apache flink', 'apache storm', 'databricks', 'redshift', 'google bigquery',
-    'snowflake', 'google bigquery', 'amazon redshift', 'teradata', 'vertica',
+    'snowflake', 'google bigquery', 'amazon redshift', 'teradata', 'vertica', 'machine learning',
     'mongodb', 'cassandra', 'dynamodb', 'couchbase', 'redis', 'apache hbase',
     'talend', 'apache nifi', 'informatica', 'matillion', 'alteryx', 'mulesoft', 'pentaho',
     'power bi', 'tableau', 'look', 'qlikview', 'domo', 'sisense',
     'apache airflow', 'prefect', 'dagster', 'luigi', 'streamlit',
 
     # Networking
-    'tcp/ip', 'dns', 'dhcp', 'http', 'https', 'ftp', 'snmp', 'ssh', 'telnet', 'sip', 'smtp', 'imap',
+    'tcp/ip', 'udp', 'dns', 'dhcp', 'http', 'https', 'ftp', 'snmp', 'ssh', 'telnet', 'sip', 'smtp', 'imap',
     'routers', 'switches', 'firewalls', 'load balancers', 'vpns', 'sd-wan', 'proxies', 'ids', 'ips', 'network monitoring',
-    'wireshark', 'nmap', 'metasploit', 'kali linux', 'burp suite', 'snort', 'nagios', 'palo alto networks', 'cisco asa', 'fortinet',
+    'wireshark', 'nmap', 'metasploit', 'netstat', 'kali linux', 'burp suite', 'snort', 'nagios', 'palo alto networks', 'cisco asa', 'fortinet',
     'aws vpc', 'azure virtual network', 'google cloud vpc', 'cloudflare', 'nginx plus', 'f5 networks', 'akamai',
 
     # Security & Ethical Hacking
     'kali linux', 'metasploit', 'burp suite', 'nmap', 'wireshark', 'aircrack-ng', 'hydra', 'john the ripper',
-    'splunk', 'snort', 'nessus', 'openvas', 'qualys', 'nexpose', 'crowdstrike', 'darktrace', 'palo alto networks', 'fortinet', 'check point',
+    'splunk', 'snort', 'nessus', 'openvas', 'qualys', 'nexpose', 'crowdstrike', 'darktrace', 'palo alto networks', 'check point',
     'owasp', 'cis', 'nist', 'iso/iec 27001', 'soc 2', 'gdpr', 'pci-dss',
     'openssl', 'pgp', 'aes', 'rsa', 'ssl/tls', 'gpg', 'hashing algorithms', 'sha', 'md5', 'hmac'
 ]
@@ -81,14 +81,14 @@ skills_keywords = [
 entry_keywords = [
     # General Entry-level Keywords
     'entry level', 'junior role', 'beginner', 'fresh graduate', 'recent graduate',
-    'new grad', 'no experience required', 'zero experience', 'trainee', 'apprentice', 'internship',
+    'new grad', 'no experience required', 'zero experience', 'trainee', 'at least', 'apprentice', 'internship',
     'intern', 'apprenticeship', 'novice', 'starter', 'first job', 'new to the industry', 'new to the field',
     'entry-level position', 'entry-level job', 'junior developer', 'junior data analyst', 'junior designer',
-    'junior engineer', 'junior software engineer', 'junior data scientist', 'entry-level analyst', 'entry-level software developer',
+    'junior engineer', 'junior software engineer', 'One year of programming/development experience', 'Experience with version control', 'Experience with Linux', 'junior data scientist', 'entry-level analyst', 'entry-level software developer',
 
     # Keywords Related to Degree Requirements
     'no degree required', 'no degree necessary', 'degree not required', 'bachelor degree required', 'masters degree required', 'degree preferred',
-    'high school diploma', 'equivalent experience', 'degree or equivalent experience','studying', 'will-earn', "towards a bachelor's deggre", 'education or experience', 'experience in lieu of degree',
+    'high school diploma', 'equivalent experience', 'job-related knowledge', 'professional software development experience', 'degree or equivalent experience', 'or equivalent', 'studying', 'will-earn', "towards a bachelor's deggre", 'education or experience', 'experience in lieu of degree',
 
     # Keywords Related to Training or Learning
     'on-the-job training', 'train', 'training provided', 'learn as you go', 'training included', 'learn on the job',
