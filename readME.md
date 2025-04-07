@@ -7,6 +7,13 @@ The repo is setup to extract job data like skills, accessibility, sentiment, pop
          python -m venv <your_environment_name>
          pip install -r requirements.txt
 
+
+If you just want a live demo:
+### Check out the notebook
+[![Binder](https://mybinder.org/badge_logo.svg)](https://hub.2i2c.mybinder.org/user/rydcri-jobscraper-xh6183dr/lab/workspaces/auto-S/tree/juypter_notebooks/dataframe_notes.ipynb)
+
+
+
 ### Features:
 Scraping: Collect job listings from sites like LinkedIn, Indeed and Greenhouse and save as .csv files.
 (Located in ./scraper.py)
@@ -198,7 +205,3 @@ More NERs:
 <li>ORDINAL:     “first”, “second”, etc.</li>
 <li>CARDINAL:    Numerals that do not fall under another type.</li>
 </ul>
-
-If you just want a live demo:
-### Check out the notebook
-[![Binder](https://mybinder.org/badge_logo.svg)](https://hub.2i2c.mybinder.org/user/rydcri-jobscraper-xh6183dr/lab/workspaces/auto-S/tree/juypter_notebooks/dataframe_notes.ipynb)
