@@ -201,4 +201,4 @@ More NERs:
 
 If you just want a live demo:
 ### Check out the notebook
-[Interactive Data Analysis on GitHub Pages](https://placeholder-link.com)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/RydCri/JobScraper/HEAD)
