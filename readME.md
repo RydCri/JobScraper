@@ -98,12 +98,17 @@ This project is ideal for jobseekers who'd like more tools to explore job market
 
     Purpose: Provides insight into the type of preparation needed for the interview.
 
-9. ### Sentiment
+9. ### Subjectivity
+    Description: Language analysis of the job description, a score that represents subjective ambiguity. (Subjective, Neutral, Objective)   
+    
+    Purpose: Often an indicator of weighted emphasis on 'soft skills' used in the job description section. While it is the habit of most job postings to employ this type of language, it may prove helpful to check for postings that clearly outline the job's needs clearly and succinctly.
+      
+10. ### Sentiment
     Description: Sentiment analysis of the job description, showing its overall positivity or negativity (e.g., Positive, Neutral).
 
     Purpose: Helps job seekers gauge the tone of the company’s work environment.
 
-10. ### NER (Named Entity Recognition)
+11. ### NER (Named Entity Recognition)
     Description: Extracted entities such as company names, locations, technologies, and more.
 
     Purpose: Highlights important information such as specific tools, locations, and organizations in the job post.
