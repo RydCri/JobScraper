@@ -15,7 +15,7 @@ Analysis: Process job descriptions using spaCy to extract key skills, accessibil
 (Located in ./spacy_nre_analyzer.py)
 
 Demo Notebook: A Jupyter notebook showcasing an example dataframe obtained from scraping, followed by dataframe processing using the analysis functions.
-(Located in ./notebooks/dataframe_notes.ipynb)
+(Located in ./juypter_notebooks/dataframe_notes.ipynb)
 
 ### What You Can Do:
 Scrape Job Listings: Use scraper.py to gather data from popular job boards based on keywords, locations and job titles.
@@ -160,6 +160,43 @@ Hope that's not confusing!</li>
         </ul>
 </ul>
 
+
+### Named Entity Recognition (NER)
+
+This model collects the following labels from scraped job listings: 
+<br><br>
+['ORG', 'GPE', 'PRODUCT', 'MONEY']
+
+<br>
+<ul>
+<li>ORG - Organizations: Business, Government, Agencies</li>
+<li>GPE - Geopolitical Entities: Countries, States, Provinces</li>
+<li>PRODUCT - Objects, vehicles, foods, etc. (Not services.)</li>
+<li>MONEY - Quantifiable currency amounts ($1,000,000 - 773 300 GBP)</li>
+</ul>
+Additional labels can be easily added in the extract_ner function in ./spacy_nre_analyzer.py
+<br>
+More NERs:
+<ul>
+<li>PERSON:      People, including fictional.</li>
+<li>NORP:        Nationalities or religious or political groups.</li>
+<li>FAC:         Buildings, airports, highways, bridges, etc.</li>
+<li>ORG:         Companies, agencies, institutions, etc.</li>
+<li>GPE:         Countries, cities, states.</li>
+<li>LOC:         Non-GPE locations, mountain ranges, bodies of water.</li>
+<li>PRODUCT:     Objects, vehicles, foods, etc. (Not services.)</li>
+<li>EVENT:       Named hurricanes, battles, wars, sports events, etc.</li>
+<li>WORK_OF_ART: Titles of books, songs, etc.</li>
+<li>LAW:         Named documents made into laws.</li>
+<li>LANGUAGE:    Any named language.</li>
+<li>DATE:        Absolute or relative dates or periods.</li>
+<li>TIME:        Times smaller than a day.</li>
+<li>PERCENT:     Percentage, including ”%“.</li>
+<li>MONEY:       Monetary values, including unit.</li>
+<li>QUANTITY:    Measurements, as of weight or distance.</li>
+<li>ORDINAL:     “first”, “second”, etc.</li>
+<li>CARDINAL:    Numerals that do not fall under another type.</li>
+</ul>
 
 If you just want a live demo:
 ### Check out the notebook
