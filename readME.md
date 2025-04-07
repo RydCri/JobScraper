@@ -116,13 +116,14 @@ This project is ideal for jobseekers who'd like more tools to explore job market
 
 ## Example of dataframe output
 
-| <br/>Title                                                   | Company<br/>  | Location<br/>  | URL<br/>                                          | Job Description<br/> | Skills<br/> | Accessibility<br/> | Interview<br/> | Sentiment<br/> | NER<br/> |
-|:---|:---|:-------|:---| :--- | :--- | :--- | :--- | :--- | :--- |
-| Full Stack - Software Engineer \(L5\) - Platform Engineering | Netflix       | Los Gatos, CA  | https://www.linkedin.com/jobs/view/full-stack-... | Netflix is one of the world's leading entertai... | \['aws'\] | \[\] | \[\] |  Positive \| Objective | {} |
-| Frontend Engineer                                            | Porter        | New York, NY   | https://www.linkedin.com/jobs/view/frontend-en... | The Role\\n\\nWe're looking for an experienced f... | \['https', 'github'\] | \[\] | \['github'\] |  Positive \| Subjective | {} |
-| Frontend Developer                                           | Adapty.io     | United States  | https://www.linkedin.com/jobs/view/frontend-de... | Adapty is a revenue management platform for mo... | \[\] | \[\] | \[\] |  Positive \| Objective | {} |
-| Front-End / Full-Stack Developer                             | Corsair       | Milpitas, CA   | https://www.linkedin.com/jobs/view/front-end-f... | Job Description\\n\\nWe are a fast-growing eComm... | \['css', 'typescript', 'tailwind css', 'react'\] | \['css'\] | \[\] |  Neutral \| Objective | {} |
-| Junior Web Developer                                         | IntelliBridge | Washington, DC | https://www.linkedin.com/jobs/view/junior-web-... | Overview\\n\\nIntelliBridge is an award-winning ... | \[\] | \['collaborative', 'junior web developer'\] | \['collaboration'\] |  Positive \| Objective | {} |
+|  | Title | Company | Location | URL | Job Description | Skills | Accessibility | Interview | Sentiment | NER |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 4 | Junior Web Developer | IntelliBridge | Washington, DC | https://www.linkedin.com/jobs/view/junior-web-... | Overview\\n\\nIntelliBridge is an award-winning ... | \[\] | \['collaborative', 'junior web developer'\] | \['collaboration'\] | \('Positive', 'Objective'\) | \[{'PRODUCT': '401k'}, {'ORG': 'pto &'}, {'ORG'... |
+| 0 | Full Stack - Software Engineer \(L5\) - Platform... | Netflix | Los Gatos, CA | https://www.linkedin.com/jobs/view/full-stack-... | Netflix is one of the world's leading entertai... | \['aws'\] | \[\] | \[\] | \('Positive', 'Objective'\) | \[{'GPE': 'netflix'}, {'GPE': 'netflix'}, {'GPE... |
+| 1 | Frontend Engineer | Porter | New York, NY | https://www.linkedin.com/jobs/view/frontend-en... | The Role\\n\\nWe're looking for an experienced f... | \['https', 'github'\] | \[\] | \['github'\] | \('Positive', 'Subjective'\) | \[{'ORG': 'justin'}\] |
+| 3 | Frontend Developer | Adapty.io | United States | https://www.linkedin.com/jobs/view/frontend-de... | Adapty is a revenue management platform for mo... | \[\] | \[\] | \[\] | \('Positive', 'Objective'\) | \[{'MONEY': '$1.4 billion'}\] |
+| 2 | Front-End / Full-Stack Developer | Corsair | Milpitas, CA | https://www.linkedin.com/jobs/view/front-end-f... | Job Description\\n\\nWe are a fast-growing eComm... | \['react', 'tailwind css', 'css', 'typescript'\] | \['css'\] | \[\] | \('Neutral', 'Objective'\) | \[{'ORG': 'cms'}, {'ORG': 'cms'}, {'GPE': 'milp... |
+
 
 
 <h3>Why Measure Subjectivity and Sentiment?</h3>
