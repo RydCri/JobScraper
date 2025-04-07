@@ -201,4 +201,4 @@ More NERs:
 
 If you just want a live demo:
 ### Check out the notebook
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/RydCri/JobScraper/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://hub.2i2c.mybinder.org/user/rydcri-jobscraper-xh6183dr/lab/workspaces/auto-S/tree/juypter_notebooks/dataframe_notes.ipynb)
