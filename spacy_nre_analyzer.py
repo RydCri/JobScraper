@@ -211,20 +211,22 @@ def interpret_sentiment(polarity, subjectivity):
 
 
 def extract_ner(description):
-
-    # Ensure description is a string before processing
     if isinstance(description, str):
         description = description.lower()
     else:
-        description = ""  # Set to empty string if it's not a string (e.g., NaN or float)
+        description = ""
     doc = nlp(description)
     entities = {}
-
     for ent in doc.ents:
         if ent.label_ in ['ORG', 'GPE', 'LOC', 'PRODUCT']:
-            entities = {label: list(set(values)) for label, values in entities.items()}
+            if ent.label_ not in entities:
+                entities[ent.label_] = []
+            entities[ent.label_].append(ent.text)
+
+    # Remove duplicates within each entity type
+    entities = {label: list(set(values)) for label, values in entities.items()}
     print("NER extracted.")
-    return entities
+    return [entities.items()]
 
 
 # Main function to process the job descriptions
@@ -281,11 +283,12 @@ def extract_interview_prep_keywords(description):
             print("Extracting Accessibility Keywords.")
     return interview_keywords
 
+
 # Full processing function for a CSV
 def process_csv_file(file_path):
     # Load the CSV file into a DataFrame
     df = pd.read_csv(file_path)
-
+    df.astype(str)
     # Ensure the 'Job Description' column exists
     if 'Job Description' not in df.columns:
         raise ValueError("CSV file must contain a 'Job Description' column.")
